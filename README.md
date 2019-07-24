@@ -13,6 +13,4 @@
 |ROM|32/64 GB
 |Battery|Phone: 2250(2400) mAh; Tablet: 5000 mAh|
 
-Device tree is created by Chronosms in 2018
-You can support me in my hard work
-https://t.me/chronosmsx
+This device tree has been originally created by Chronosms in 2018

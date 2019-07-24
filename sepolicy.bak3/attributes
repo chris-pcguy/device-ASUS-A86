@@ -1,0 +1,26 @@
+
+#
+# Define attribute identifiers
+#
+
+#attribute appdomain;
+#attribute binderservicedomain;
+#attribute bluetoothdomain;
+#attribute contextmount_type;
+#attribute data_file_type;
+#attribute dev_type;
+#attribute domain;
+#attribute exec_type;
+#attribute file_type;
+#attribute fs_type;
+#attribute mlstrustedobject;
+#attribute mlstrustedsubject;
+#attribute netdomain;
+#attribute netif_type;
+#attribute node_type;
+#attribute port_type;
+#attribute property_type;
+#attribute sdcard_type;
+#attribute service_manager_type;
+#attribute sysfs_type;
+attribute unconfineddomain;

@@ -1,0 +1,835 @@
+
+#
+# Define common prefixes for access vectors
+#
+
+#common database
+#{
+#	setattr
+#	relabelto
+#	drop
+#	relabelfrom
+#	create
+#	getattr
+#}
+
+#common file
+#{
+#	rename
+#	unlink
+#	setattr
+#	read
+#	write
+#	relabelto
+#	swapon
+#	mounton
+#	relabelfrom
+#	append
+#	create
+#	getattr
+#	quotaon
+#	execute
+#	link
+#	ioctl
+#	lock
+#}
+
+#common ipc
+#{
+#	setattr
+#	read
+#	write
+#	destroy
+#	unix_read
+#	create
+#	getattr
+#	unix_write
+#	associate
+#}
+
+#common socket
+#{
+#	bind
+#	accept
+#	write
+#	create
+#	getattr
+#	lock
+#	recvfrom
+#	getopt
+#	send_msg
+#	append
+#	listen
+#	connect
+#	read
+#	relabelto
+#	shutdown
+#	sendto
+#	relabelfrom
+#	setattr
+#	name_bind
+#	recv_msg
+#	setopt
+#	ioctl
+#}
+
+#common x_device
+#{
+#	set_property
+#	force_cursor
+#	setattr
+#	list_property
+#	bell
+#	manage
+#	use
+#	read
+#	add
+#	write
+#	destroy
+#	grab
+#	remove
+#	create
+#	getfocus
+#	getattr
+#	setfocus
+#	get_property
+#	freeze
+#}
+
+#
+# Define the access vectors
+#
+
+#class appletalk_socket
+#inherits socket
+
+#class association
+#{
+#	setcontext
+#	sendto
+#	recvfrom
+#	polmatch
+#}
+
+#class binder
+#{
+#	transfer
+#	set_context_mgr
+#	call
+#	impersonate
+#}
+
+#class blk_file
+#inherits file
+#{
+#	execmod
+#	audit_access
+#	open
+#}
+
+#class capability
+#{
+#	kill
+#	mknod
+#	setuid
+#	setfcap
+#	net_broadcast
+#	audit_control
+#	net_admin
+#	ipc_lock
+#	sys_rawio
+#	sys_nice
+#	sys_tty_config
+#	sys_time
+#	audit_write
+#	dac_override
+#	chown
+#	sys_pacct
+#	fowner
+#	linux_immutable
+#	dac_read_search
+#	net_bind_service
+#	setpcap
+#	setgid
+#	sys_admin
+#	sys_boot
+#	fsetid
+#	net_raw
+#	sys_chroot
+#	ipc_owner
+#	sys_module
+#	sys_ptrace
+#	lease
+#	sys_resource
+#}
+
+#class capability2
+#{
+#	syslog
+#	block_suspend
+#	wake_alarm
+#	mac_override
+#	mac_admin
+#}
+
+#class chr_file
+#inherits file
+#{
+#	open
+#	entrypoint
+#	execute_no_trans
+#	audit_access
+#	execmod
+#}
+
+#class context
+#{
+#	contains
+#	translate
+#}
+
+#class db_blob
+#inherits database
+#{
+#	export
+#	read
+#	write
+#	import
+#}
+
+#class db_column
+#inherits database
+#{
+#	insert
+#	select
+#	use
+#	update
+#}
+
+#class db_database
+#inherits database
+#{
+#	set_param
+#	load_module
+#	install_module
+#	get_param
+#	access
+#}
+
+#class db_language
+#inherits database
+#{
+#	execute
+#	implement
+#}
+
+#class db_procedure
+#inherits database
+#{
+#	entrypoint
+#	execute
+#	install
+#}
+
+#class db_schema
+#inherits database
+#{
+#	search
+#	remove_name
+#	add_name
+#}
+
+#class db_sequence
+#inherits database
+#{
+#	get_value
+#	next_value
+#	set_value
+#}
+
+#class db_table
+#inherits database
+#{
+#	select
+#	use
+#	update
+#	insert
+#	lock
+#	delete
+#}
+
+#class db_tuple
+#{
+#	select
+#	use
+#	update
+#	relabelto
+#	insert
+#	relabelfrom
+#	delete
+#}
+
+#class db_view
+#inherits database
+#{
+#	expand
+#}
+
+#class dbus
+#{
+#	acquire_svc
+#	send_msg
+#}
+
+#class dccp_socket
+#inherits socket
+#{
+#	name_connect
+#	node_bind
+#}
+
+#class dir
+#inherits file
+#{
+#	reparent
+#	open
+#	remove_name
+#	rmdir
+#	search
+#	add_name
+#	audit_access
+#	execmod
+#}
+
+#class fd
+#{
+#	use
+#}
+
+#class fifo_file
+#inherits file
+#{
+#	execmod
+#	audit_access
+#	open
+#}
+
+#class file
+#inherits file
+#{
+#	open
+#	entrypoint
+#	execute_no_trans
+#	audit_access
+#	execmod
+#}
+
+#class filesystem
+#{
+#	remount
+#	quotaget
+#	transition
+#	relabelto
+#	quotamod
+#	relabelfrom
+#	getattr
+#	associate
+#	unmount
+#	mount
+#}
+
+#class ipc
+#inherits ipc
+
+#class kernel_service
+#{
+#	create_files_as
+#	use_as_override
+#}
+
+#class key
+#{
+#	setattr
+#	view
+#	read
+#	write
+#	search
+#	create
+#	link
+#}
+
+#class key_socket
+#inherits socket
+
+#class keystore_key
+#{
+#	sync_uid
+#	reset
+#	duplicate
+#	exist
+#	unlock
+#	saw
+#	zero
+#	verify
+#	test
+#	clear_uid
+#	reset_uid
+#	password
+#	password_uid
+#	insert
+#	lock
+#	sign
+#	grant
+#	get
+#	delete
+#}
+
+#class lnk_file
+#inherits file
+#{
+#	execmod
+#	audit_access
+#	open
+#}
+
+#class memprotect
+#{
+#	mmap_zero
+#}
+
+#class msg
+#{
+#	send
+#	receive
+#}
+
+#class msgq
+#inherits ipc
+#{
+#	enqueue
+#}
+
+#class netif
+#{
+#	dccp_send
+#	dccp_recv
+#	udp_recv
+#	udp_send
+#	rawip_recv
+#	tcp_send
+#	rawip_send
+#	ingress
+#	tcp_recv
+#	egress
+#}
+
+#class netlink_audit_socket
+#inherits socket
+#{
+#	nlmsg_tty_audit
+#	nlmsg_write
+#	nlmsg_relay
+#	nlmsg_readpriv
+#	nlmsg_read
+#}
+
+#class netlink_dnrt_socket
+#inherits socket
+
+class netlink_firewall_socket
+inherits socket
+{
+	nlmsg_write
+	nlmsg_read
+}
+
+class netlink_ip6fw_socket
+inherits socket
+{
+	nlmsg_write
+	nlmsg_read
+}
+
+#class netlink_kobject_uevent_socket
+#inherits socket
+
+#class netlink_nflog_socket
+#inherits socket
+
+#class netlink_route_socket
+#inherits socket
+#{
+#	nlmsg_write
+#	nlmsg_read
+#}
+
+#class netlink_selinux_socket
+#inherits socket
+
+#class netlink_socket
+#inherits socket
+
+#class netlink_tcpdiag_socket
+#inherits socket
+#{
+#	nlmsg_write
+#	nlmsg_read
+#}
+
+#class netlink_xfrm_socket
+#inherits socket
+#{
+#	nlmsg_write
+#	nlmsg_read
+#}
+
+#class node
+#{
+#	dccp_send
+#	dccp_recv
+#	udp_recv
+#	udp_send
+#	recvfrom
+#	rawip_recv
+#	tcp_send
+#	enforce_dest
+#	sendto
+#	tcp_recv
+#	rawip_send
+#}
+
+#class nscd
+#{
+#	getstat
+#	shmemgrp
+#	getgrp
+#	gethost
+#	shmempwd
+#	getserv
+#	getpwd
+#	shmemserv
+#	admin
+#	shmemhost
+#}
+
+#class packet
+#{
+#	recv
+#	send
+#	flow_in
+#	relabelto
+#	forward_in
+#	flow_out
+#	forward_out
+#}
+
+#class packet_socket
+#inherits socket
+
+#class passwd
+#{
+#	crontab
+#	passwd
+#	rootok
+#	chsh
+#	chfn
+#}
+
+#class peer
+#{
+#	recv
+#}
+
+#class process
+#{
+#	share
+#	dyntransition
+#	fork
+#	signull
+#	rlimitinh
+#	setrlimit
+#	getattr
+#	signal
+#	transition
+#	getsched
+#	execmem
+#	setsockcreate
+#	setpgid
+#	setkeycreate
+#	getcap
+#	execstack
+#	sigstop
+#	sigkill
+#	ptrace
+#	sigchld
+#	setcap
+#	execheap
+#	setcurrent
+#	noatsecure
+#	setexec
+#	getpgid
+#	getsession
+#	setfscreate
+#	siginh
+#	setsched
+#}
+
+#class property_service
+#{
+#	set
+#}
+
+#class rawip_socket
+#inherits socket
+#{
+#	node_bind
+#}
+
+#class security
+#{
+#	compute_relabel
+#	read_policy
+#	check_context
+#	setcheckreqprot
+#	compute_user
+#	compute_member
+#	setbool
+#	setsecparam
+#	load_policy
+#	compute_av
+#	setenforce
+#	compute_create
+#}
+
+#class sem
+#inherits ipc
+
+#class service_manager
+#{
+#	find
+#	list
+#	add
+#}
+
+#class shm
+#inherits ipc
+#{
+#	lock
+#}
+
+#class sock_file
+#inherits file
+#{
+#	execmod
+#	audit_access
+#	open
+#}
+
+#class socket
+#inherits socket
+
+#class system
+#{
+#	ipc_info
+#	syslog_mod
+#	module_request
+#	syslog_read
+#	syslog_console
+#}
+
+#class tcp_socket
+#inherits socket
+#{
+#	connectto
+#	newconn
+#	acceptfrom
+#	name_connect
+#	node_bind
+#}
+
+#class tun_socket
+#inherits socket
+#{
+#	attach_queue
+#}
+
+#class udp_socket
+#inherits socket
+#{
+#	node_bind
+#}
+
+#class unix_dgram_socket
+#inherits socket
+
+#class unix_stream_socket
+#inherits socket
+#{
+#	connectto
+#	newconn
+#	acceptfrom
+#}
+
+#class x_application_data
+#{
+#	paste
+#	copy
+#	paste_after_confirm
+#}
+
+#class x_client
+#{
+#	manage
+#	getattr
+#	setattr
+#	destroy
+#}
+
+#class x_colormap
+#{
+#	remove_color
+#	use
+#	uninstall
+#	read
+#	write
+#	destroy
+#	create
+#	getattr
+#	add_color
+#	install
+#}
+
+#class x_cursor
+#{
+#	use
+#	setattr
+#	read
+#	write
+#	destroy
+#	create
+#	getattr
+#}
+
+#class x_device
+#inherits x_device
+
+#class x_drawable
+#{
+#	set_property
+#	add_child
+#	manage
+#	setattr
+#	list_property
+#	remove_child
+#	send
+#	blend
+#	read
+#	write
+#	destroy
+#	create
+#	list_child
+#	getattr
+#	receive
+#	override
+#	get_property
+#	hide
+#	show
+#}
+
+#class x_event
+#{
+#	send
+#	receive
+#}
+
+#class x_extension
+#{
+#	use
+#	query
+#}
+
+#class x_font
+#{
+#	add_glyph
+#	use
+#	destroy
+#	create
+#	getattr
+#	remove_glyph
+#}
+
+#class x_gc
+#{
+#	use
+#	setattr
+#	destroy
+#	create
+#	getattr
+#}
+
+#class x_keyboard
+#inherits x_device
+
+#class x_pointer
+#inherits x_device
+
+#class x_property
+#{
+#	setattr
+#	read
+#	write
+#	destroy
+#	append
+#	getattr
+#	create
+#}
+
+#class x_resource
+#{
+#	read
+#	write
+#}
+
+#class x_screen
+#{
+#	show_cursor
+#	setattr
+#	saver_hide
+#	saver_show
+#	saver_setattr
+#	hide_cursor
+#	getattr
+#	saver_getattr
+#}
+
+#class x_selection
+#{
+#	setattr
+#	read
+#	getattr
+#	write
+#}
+
+#class x_server
+#{
+#	record
+#	manage
+#	setattr
+#	debug
+#	grab
+#	getattr
+#}
+
+#class x_synthetic_event
+#{
+#	send
+#	receive
+#}
+
+class zygote
+{
+	specifyrlimits
+	specifyinvokewith
+	specifyids
+	specifyseinfo
+}

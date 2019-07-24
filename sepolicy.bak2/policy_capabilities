@@ -1,0 +1,7 @@
+
+#
+# Define policy capabilities
+#
+
+policycap network_peer_controls;
+policycap open_perms;

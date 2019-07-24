@@ -1,1 +1,4 @@
-add_lunch_combo tnapi-eng
+add_lunch_combo lineage_A86-user
+add_lunch_combo lineage_A86-userdebug
+add_lunch_combo lineage_A86-eng
+add_lunch_combo lineage_A86-perf

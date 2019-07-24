@@ -1,2 +1,2 @@
 PRODUCT_MAKEFILES := \
-	$(LOCAL_DIR)/ASUS-A86.mk
+    $(LOCAL_DIR)/lineage_A86.mk

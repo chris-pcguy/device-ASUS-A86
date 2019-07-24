@@ -1,0 +1,7 @@
+
+#
+# Define users
+#
+
+user u roles r level s0 range s0 - s0:c0.c1023;
+
