@@ -1,0 +1,41 @@
+
+project external/boringssl/
+diff --git a/sources.bp b/sources.bp
+index 377c715..417b9c2 100644
+--- a/sources.bp
++++ b/sources.bp
+@@ -234,6 +234,8 @@ cc_defaults {
+         "src/crypto/x509v3/v3_skey.c",
+         "src/crypto/x509v3/v3_sxnet.c",
+         "src/crypto/x509v3/v3_utl.c",
++        "src/decrepit/bio/base64_bio.c",
++        "src/decrepit/rsa/rsa_decrepit.c",
+         "src/third_party/fiat/curve25519.c",
+     ],
+     target: {
+diff --git a/sources.mk b/sources.mk
+index dd17d8b..ee75df9 100644
+--- a/sources.mk
++++ b/sources.mk
+@@ -232,6 +232,8 @@ crypto_sources := \
+   src/crypto/x509v3/v3_skey.c\
+   src/crypto/x509v3/v3_sxnet.c\
+   src/crypto/x509v3/v3_utl.c\
++  src/decrepit/bio/base64_bio.c\
++  src/decrepit/rsa/rsa_decrepit.c\
+   src/third_party/fiat/curve25519.c\
+ 
+ linux_aarch64_sources := \
+diff --git a/src/util/generate_build_files.py b/src/util/generate_build_files.py
+index f2b10de..a368340 100644
+--- a/src/util/generate_build_files.py
++++ b/src/util/generate_build_files.py
+@@ -582,6 +582,8 @@ def ExtractVariablesFromCMakeFile(cmakefile):
+ def main(platforms):
+   cmake = ExtractVariablesFromCMakeFile(os.path.join('src', 'sources.cmake'))
+   crypto_c_files = (FindCFiles(os.path.join('src', 'crypto'), NoTestsNorFIPSFragments) +
++                    FindCFiles(os.path.join('src', 'decrepit', 'bio'), NoTestsNorFIPSFragments) +
++                    FindCFiles(os.path.join('src', 'decrepit', 'rsa'), NoTestsNorFIPSFragments) +
+                     FindCFiles(os.path.join('src', 'third_party', 'fiat'), NoTestsNorFIPSFragments))
+   fips_fragments = FindCFiles(os.path.join('src', 'crypto', 'fipsmodule'), OnlyFIPSFragments)
+   ssl_source_files = FindCFiles(os.path.join('src', 'ssl'), NoTests)

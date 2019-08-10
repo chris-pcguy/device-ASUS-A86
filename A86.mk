@@ -3,6 +3,7 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/languages_full.mk)
 $(call inherit-product, frameworks/native/build/phone-xhdpi-2048-dalvik-heap.mk)
 
 DEVICE_PACKAGE_OVERLAYS += $(LOCAL_PATH)/overlay
+DEVICE_PACKAGE_OVERLAYS += $(LOCAL_PATH)/overlay-lineage
 
 TARGET_SCREEN_HEIGHT := 1920
 TARGET_SCREEN_WIDTH := 1080
@@ -16,47 +17,51 @@ PRODUCT_PACKAGES += \
     init.qcom.power.rc \
     init.qcom.usb.rc \
     init.recovery.qcom.rc \
-    init.target.rc \
     ueventd.qcom.rc
 
 # Input device files for A86
-#PRODUCT_COPY_FILES += \
-#    device/asus/A86/gpio-keys.kl:system/usr/keylayout/gpio-keys.kl \
-#    device/asus/A86/gpio-keys.kcm:system/usr/keychars/gpio-keys.kcm \
-#    device/asus/A86/qpnp_pon.kl:system/usr/keylayout/qpnp_pon.kl \
-#    device/asus/A86/qpnp_pon.kcm:system/usr/keychars/qpnp_pon.kcm \
-#    device/asus/A86/Button_Jack.kl:system/usr/keylayout/msm8974-taiko-mtp-snd-card_Button_Jack.kl \
-#    device/asus/A86/Button_Jack.kcm:system/usr/keychars/msm8974-taiko-mtp-snd-card_Button_Jack.kcm \
-#    device/asus/A86/hs_detect.kl:system/usr/keylayout/hs_detect.kl \
-#    device/asus/A86/hs_detect.kcm:system/usr/keychars/hs_detect.kcm
-#
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/usr/keylayout/ASUS_TransKeyboard.kl:system/usr/keylayout/ASUS_TransKeyboard.kl \
+    $(LOCAL_PATH)/usr/keylayout/atmel_mxt_ts.kl:system/usr/keylayout/atmel_mxt_ts.kl \
+    $(LOCAL_PATH)/usr/keylayout/elan-touchscreen.kl:system/usr/keylayout/elan-touchscreen.kl \
+    $(LOCAL_PATH)/usr/keylayout/gpio-keys.kl:system/usr/keylayout/gpio-keys.kl \
+    $(LOCAL_PATH)/usr/keylayout/synaptics_rmi4_i2c.kl:system/usr/keylayout/synaptics_rmi4_i2c.kl \
+    $(LOCAL_PATH)/usr/keylayout/Vendor_0b05_Product_17fc.kl:system/usr/keylayout/Vendor_0b05_Product_17fc.kl \
+    $(LOCAL_PATH)/usr/keylayout/Vendor_0b05_Product_1803.kl:system/usr/keylayout/Vendor_0b05_Product_1803.kl \
+    $(LOCAL_PATH)/usr/keylayout/Vendor_0b05_Product_5000.kl:system/usr/keylayout/Vendor_0b05_Product_5000.kl
+
 # Prebuilt input device calibration files
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/usr/idc/asus_dds_sis_touch.idc:system/usr/idc/asus_dds_sis_touch.idc \
+    $(LOCAL_PATH)/usr/idc/ASUS_TransKeyboard.idc:system/usr/idc/ASUS_TransKeyboard.idc \
+    $(LOCAL_PATH)/usr/idc/elan-touchscreen.idc:system/usr/idc/elan-touchscreen.idc \
+    $(LOCAL_PATH)/usr/idc/Vendor_0b05_Product_17fc.idc:system/usr/idc/Vendor_0b05_Product_17fc.idc \
+    $(LOCAL_PATH)/usr/idc/Vendor_0b05_Product_1803.idc:system/usr/idc/Vendor_0b05_Product_1803.idc \
+    $(LOCAL_PATH)/usr/idc/Vendor_0b05_Product_5000.idc:system/usr/idc/Vendor_0b05_Product_5000.idc
+
+PRODUCT_COPY_FILES += \
+    frameworks/av/services/audiopolicy/config/a2dp_audio_policy_configuration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/a2dp_audio_policy_configuration.xml \
+    frameworks/av/services/audiopolicy/config/r_submix_audio_policy_configuration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/r_submix_audio_policy_configuration.xml \
+    frameworks/av/services/audiopolicy/config/usb_audio_policy_configuration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/usb_audio_policy_configuration.xml \
+    frameworks/av/services/audiopolicy/config/default_volume_tables.xml:$(TARGET_COPY_OUT_VENDOR)/etc/default_volume_tables.xml \
+    frameworks/av/services/audiopolicy/config/audio_policy_volumes.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio_policy_volumes.xml \
+    $(LOCAL_PATH)/audio/audio_effects.conf:$(TARGET_COPY_OUT_VENDOR)/etc/audio_effects.conf \
+    $(LOCAL_PATH)/audio/audio_policy.conf:$(TARGET_COPY_OUT_VENDOR)/etc/audio_policy.conf \
+    $(LOCAL_PATH)/audio/mixer_paths.xml:$(TARGET_COPY_OUT_VENDOR)/etc/mixer_paths.xml \
+    $(LOCAL_PATH)/audio/mixer_paths_auxpcm.xml:$(TARGET_COPY_OUT_VENDOR)/etc/mixer_paths_auxpcm.xml
+
+PRODUCT_COPY_FILES += \
+    frameworks/av/media/libstagefright/data/media_codecs_google_audio.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_google_audio.xml \
+    frameworks/av/media/libstagefright/data/media_codecs_google_telephony.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_google_telephony.xml \
+    frameworks/av/media/libstagefright/data/media_codecs_google_video.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_google_video.xml \
+    $(LOCAL_PATH)/configs/media_codecs.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs.xml \
+    $(LOCAL_PATH)/configs/media_profiles.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_profiles_V1_0.xml
+
 #PRODUCT_COPY_FILES += \
-#    device/asus/A86/touch_dev.idc:system/usr/idc/touch_dev.idc
+#    $(LOCAL_PATH)/bcmdhd.cal:system/etc/wifi/bcmdhd.cal
 #
 #PRODUCT_COPY_FILES += \
-#    frameworks/av/services/audiopolicy/config/a2dp_audio_policy_configuration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/a2dp_audio_policy_configuration.xml \
-#    frameworks/av/services/audiopolicy/config/r_submix_audio_policy_configuration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/r_submix_audio_policy_configuration.xml \
-#    frameworks/av/services/audiopolicy/config/usb_audio_policy_configuration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/usb_audio_policy_configuration.xml \
-#    frameworks/av/services/audiopolicy/config/default_volume_tables.xml:$(TARGET_COPY_OUT_VENDOR)/etc/default_volume_tables.xml \
-#    frameworks/av/services/audiopolicy/config/audio_policy_volumes.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio_policy_volumes.xml \
-#    device/asus/A86/audio_platform_info.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio_platform_info.xml \
-#    device/asus/A86/audio_policy_configuration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio_policy_configuration.xml \
-#    device/asus/A86/mixer_paths.xml:system/etc/mixer_paths.xml
-#
-#PRODUCT_COPY_FILES += \
-#    frameworks/av/media/libstagefright/data/media_codecs_google_audio.xml:system/etc/media_codecs_google_audio.xml \
-#    frameworks/av/media/libstagefright/data/media_codecs_google_telephony.xml:system/etc/media_codecs_google_telephony.xml \
-#    frameworks/av/media/libstagefright/data/media_codecs_google_video.xml:system/etc/media_codecs_google_video.xml \
-#    device/asus/A86/media_codecs.xml:system/etc/media_codecs.xml \
-#    device/asus/A86/media_codecs_performance.xml:system/etc/media_codecs_performance.xml \
-#    device/asus/A86/media_profiles_V1_0.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_profiles_V1_0.xml
-#
-#PRODUCT_COPY_FILES += \
-#    device/asus/A86/bcmdhd.cal:system/etc/wifi/bcmdhd.cal
-#
-#PRODUCT_COPY_FILES += \
-#    device/asus/A86/bluetooth/BCM4339_003.001.009.0079.0339.hcd:$(TARGET_COPY_OUT_VENDOR)/firmware/bcm4335c0.hcd
+#    $(LOCAL_PATH)/bluetooth/BCM4339_003.001.009.0079.0339.hcd:$(TARGET_COPY_OUT_VENDOR)/firmware/bcm4335c0.hcd
 #
 # These are the hardware-specific features
 #PRODUCT_COPY_FILES += \
@@ -86,36 +91,88 @@ PRODUCT_PACKAGES += \
 #
 # For GPS
 #PRODUCT_COPY_FILES += \
-#    device/asus/A86/sec_config:system/etc/sec_config
+#    $(LOCAL_PATH)/sec_config:system/etc/sec_config
 #
 # NFC access control + feature files + configuration
 #PRODUCT_COPY_FILES += \
 #    frameworks/native/data/etc/android.hardware.nfc.xml:system/etc/permissions/android.hardware.nfc.xml \
 #    frameworks/native/data/etc/android.hardware.nfc.hce.xml:system/etc/permissions/android.hardware.nfc.hce.xml \
-#    device/asus/A86/nfc/libnfc-brcm.conf:system/etc/libnfc-brcm.conf \
-#    device/asus/A86/nfc/libnfc-brcm-20791b05.conf:system/etc/libnfc-brcm-20791b05.conf
-#
-#PRODUCT_COPY_FILES += \
-#    device/asus/A86/thermal-engine-8974.conf:system/etc/thermal-engine-8974.conf
-#
+#    $(LOCAL_PATH)/nfc/libnfc-brcm.conf:system/etc/libnfc-brcm.conf \
+#    $(LOCAL_PATH)/nfc/libnfc-brcm-20791b05.conf:system/etc/libnfc-brcm-20791b05.conf
 
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/configs/thermal-engine-8974.conf:system/etc/thermal-engine-8974.conf
+
+PRODUCT_COPY_FILES += \
+   $(LOCAL_PATH)/configs/wpa_supplicant_overlay.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/wpa_supplicant_overlay.conf \
+   $(LOCAL_PATH)/configs/p2p_supplicant_overlay.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/p2p_supplicant_overlay.conf
+
+#PRODUCT_PACKAGES += \
+#    audiod \
+#    audio.a2dp.default \
+#    audio_policy.msm8974 \
+#    audio.primary.msm8974 \
+#    audio.r_submix.default \
+#    audio.usb.default \
+#    libqcompostprocbundle \
+#    libqcomvisualizer \
+#    libqcomvoiceprocessing \
+#    tinymix
+
+# Audio
 PRODUCT_PACKAGES += \
-    audiod \
-    audio.a2dp.default \
+    android.hardware.audio@2.0-impl \
+    android.hardware.audio@2.0-service \
+    android.hardware.audio.effect@2.0-impl \
     audio_policy.msm8974 \
+    audio.a2dp.default \
     audio.primary.msm8974 \
     audio.r_submix.default \
     audio.usb.default \
-    libqcompostprocbundle \
     libqcomvisualizer \
+    libqcompostprocbundle \
     libqcomvoiceprocessing \
     tinymix
+
+# Display
+PRODUCT_PACKAGES += \
+    android.hardware.graphics.allocator@2.0-impl \
+    android.hardware.graphics.allocator@2.0-service \
+    android.hardware.graphics.composer@2.1-impl \
+    android.hardware.graphics.mapper@2.0-impl \
+    android.hardware.memtrack@1.0-impl \
+    android.hardware.memtrack@1.0-service \
+    copybit.msm8974 \
+    gralloc.msm8974 \
+    hwcomposer.msm8974 \
+    memtrack.msm8974 \
+    liboverlay
 
 # USB
 PRODUCT_PACKAGES += \
     android.hardware.usb@1.0-service.basic
 
+# Keymaster
+PRODUCT_PACKAGES += \
+    android.hardware.keymaster@3.0-impl \
+    android.hardware.keymaster@3.0-service
+
+# Keystore
+PRODUCT_PACKAGES += \
+    keystore.msm8974
+
+# Trust HAL
+PRODUCT_PACKAGES += \
+    vendor.lineage.trust@1.0-service
+
+# Seccomp
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/seccomp/mediacodec.policy:$(TARGET_COPY_OUT_VENDOR)/etc/seccomp_policy/mediacodec.policy \
+    $(LOCAL_PATH)/seccomp/mediaextractor.policy:$(TARGET_COPY_OUT_VENDOR)/etc/seccomp_policy/mediaextractor.policy
+
 
 # Vendor security patch level
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.lineage.build.vendor_security_patch=2016-10-05
+
+$(call inherit-product, vendor/asus/A86/A86-vendor.mk)

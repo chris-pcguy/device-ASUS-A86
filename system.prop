@@ -13,3 +13,25 @@ persist.usb.diag=1
 # I'm unsure whether I should use aio_compat here or in an init*.rc, so why not both.
 sys.usb.ffs.aio_compat=1
 
+persist.sys.usb.config=adb
+persist.data.qmi.adb_logmask=0
+
+persist.sys.phone.width=1080
+persist.sys.phone.height=1920
+persist.sys.phone.dpi=480
+persist.sys.pad.width=1920
+persist.sys.pad.height=1200
+persist.sys.pad.dpi=240
+persist.sys.padfone=1
+#ro.zygote=zygote32
+persist.sys.strict_op_enable=false
+persist.sys.whitelist=/system/etc/whitelist_appops.xml
+camera2.portability.force_api=1
+#persist.sys.usb.config=mtp
+#dalvik.vm.dex2oat-Xms=64m
+#dalvik.vm.dex2oat-Xmx=512m
+#dalvik.vm.image-dex2oat-Xms=64m
+#dalvik.vm.image-dex2oat-Xmx=64m
+ro.dalvik.vm.native.bridge=0
+
+
