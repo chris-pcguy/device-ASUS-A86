@@ -126,8 +126,8 @@
             <Quirk name="requires-global-flush" />
         </MediaCodec>
         -->
-        <MediaCodec name="OMX.qcom.audio.decoder.amrwbplus" type="audio/amr-wb-plus" >
-        </MediaCodec>
+       <!-- Where's the library for this? <MediaCodec name="OMX.qcom.audio.decoder.amrwbplus" type="audio/amr-wb-plus" >
+        </MediaCodec> -->
 	<!-- Disable qcelp -->
 	<!--
         <MediaCodec name="OMX.qcom.audio.decoder.Qcelp13" type="audio/qcelp" >
