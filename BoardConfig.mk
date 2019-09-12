@@ -258,7 +258,7 @@ TARGET_USES_INTERACTION_BOOST := true
 #BOARD_HARDWARE_CLASS :=
 
 # HIDL
-DEVICE_MANIFEST_FILE := $(DEVICE_PATH)/manifest.xml
+DEVICE_MANIFEST_FILE := $(DEVICE_PATH)/configs/manifest.xml
 
 # Wifi
 BOARD_HAS_QCOM_WLAN              := true

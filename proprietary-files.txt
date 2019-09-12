@@ -1,6 +1,6 @@
 # from android_device_fairphone_FP2
 # Camera
-bin/mm-qcamera-daemon:vendor/bin/mm-qcamera-daemon
+#bin/mm-qcamera-daemon:vendor/bin/mm-qcamera-daemon
 lib/libchromatix_imx135_liveshot.so:vendor/lib/libchromatix_imx135_liveshot.so
 vendor/lib/libactuator_dw9714.so
 vendor/lib/libactuator_dw9714_camcorder.so
@@ -368,5 +368,8 @@ etc/firmware/wlan/prima/WCNSS_wlan_nv_MKK13.bin:vendor/firmware/wlan/prima/WCNSS
 etc/firmware/wlan/prima/WCNSS_wlan_nv_MKK14.bin:vendor/firmware/wlan/prima/WCNSS_wlan_nv_MKK14.bin|3b98c5d88ce4f4ad4d65defa1b1e766280597507
 etc/firmware/wlan/prima/WCNSS_wlan_nv_MKK15.bin:vendor/firmware/wlan/prima/WCNSS_wlan_nv_MKK15.bin|a68ecc1f771718ee5155da6eeee52fc41cf1ac6f
 etc/firmware/wlan/prima/WCNSS_wlan_nv_NULL1.bin:vendor/firmware/wlan/prima/WCNSS_wlan_nv_NULL1.bin|b05ce48810cf4003c578b5a9c6d4792c88758202
+
+etc/blist.conf:vendor/etc/blist.conf
+
 
 

@@ -151,5 +151,8 @@ $(shell mkdir -p $(TARGET_OUT)/etc/firmware/wlan/prima; \
 	ln -sf /firmware/wifi.nv \
 		$(TARGET_OUT)/etc/firmware/wlan/prima/wifi.nv)
 
+$(shell ln -sf /vendor/etc/blist.conf $(TARGET_OUT)/etc/blist.conf)
+
 endif
+
 

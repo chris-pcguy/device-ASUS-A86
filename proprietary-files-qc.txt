@@ -81,7 +81,7 @@ vendor/lib/libOmxQcelp13Dec.so
 vendor/lib/libOmxWmaDec.so
 
 # Perf
-bin/mpdecision:vendor/bin/mpdecision
+#bin/mpdecision:vendor/bin/mpdecision
 vendor/lib/libqti-perfd-client.so
 
 # Postprocessing

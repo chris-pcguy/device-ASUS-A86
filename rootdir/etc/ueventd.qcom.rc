@@ -26,15 +26,17 @@
 #
 
 # the DIAG device node is not world writable/readable.
-/dev/diag                 0660   system     oem_2950
+#/dev/diag                 0660   system     oem_2950
+#/dev/diag                 0660   system     qcom_diag
+/dev/diag                 0666   radio     radio
 
 /dev/genlock              0666   system     system
-/dev/kgsl                 0666   system     system
+#/dev/kgsl                 0666   system     system
 /dev/kgsl-3d0             0666   system     system
 /dev/kgsl-2d0             0666   root       root
 /dev/kgsl-2d1             0666   root       root
 /dev/ion                  0664   system     system
-/dev/rtc0                 0600   system     system
+#/dev/rtc0                 0600   system     system
 /dev/smd0                 0660   system     system
 /dev/smd4                 0660   system     system
 /dev/smd_cxm_qmi          0640   radio      radio
@@ -104,7 +106,7 @@
 /dev/jpeg2                0660   system     camera
 /dev/adsprpc-smd          0664   system     system
 /dev/system_health_monitor 0644  radio      system
-/dev/msm_camera/*         0660   system     camera
+#/dev/msm_camera/*         0660   system     camera
 /dev/gemini/              0660   system     camera
 /dev/mercury0             0660   system     camera
 /dev/msm_vidc_reg         0660   system     audio
@@ -112,7 +114,7 @@
 /dev/msm_vidc_dec_sec     0660   system     audio
 /dev/msm_vidc_enc         0660   system     audio
 /dev/msm_rotator          0660   system     system
-/dev/hw_random            0600   root       root
+#/dev/hw_random            0600   root       root
 /dev/adsprpc-smd          0664   system     system
 
 #permissions for audio
@@ -186,11 +188,11 @@
 /dev/uio2                 0660   system     system
 
 ### ASUS
-/dev/log/*                0666   root       log
-/dev/android_adb          0660   adb        adb
-/dev/android_adb_enable   0660   adb        adb
-/dev/android_pclink        0660   adb        adb
-/dev/android_pclink_enable 0660   adb        adb
+#/dev/log/*                0666   root       log
+#/dev/android_adb          0660   adb        adb
+#/dev/android_adb_enable   0660   adb        adb
+#/dev/android_pclink        0660   adb        adb
+#/dev/android_pclink_enable 0660   adb        adb
 # +++ ASUS Alian_Shen "Porting P/L Sensor"
 /dev/psensor                   0660   system     system
 /dev/lsensor                   0660   system     system

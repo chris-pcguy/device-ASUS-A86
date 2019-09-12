@@ -55,6 +55,7 @@ program_bdaddr ()
 {
   /system/bin/btnvtool -O
   logi "Bluetooth Address programmed successfully"
+/init.program_bdaddr.sh # TODO: HACK
 }
 
 #
