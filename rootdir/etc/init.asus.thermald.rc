@@ -8,8 +8,7 @@
 # ASUS_BSP--- Shawn_Huang
 
 # ASUS_BSP+++ Shawn_Huang
-#service shawnA /system/bin/sh /vendor/etc/init.asus.thermal_conf.sh
-service shawnA /system/bin/sh /init.asus.thermal_conf.sh
+service shawnA /system/bin/sh /vendor/etc/init.asus.thermal_conf.sh
         class core
         user root
         oneshot
@@ -17,8 +16,7 @@ service shawnA /system/bin/sh /init.asus.thermal_conf.sh
 # ASUS_BSP--- Shawn_Huang
 
 # ASUS_BSP+++ Shawn_Huang
-#service set_deftime /system/bin/sh /vendor/etc/init.asus.set_time.sh
-service set_deftime /system/bin/sh /init.asus.set_time.sh
+service set_deftime /system/bin/sh /vendor/etc/init.asus.set_time.sh
         class core
         user root
         oneshot

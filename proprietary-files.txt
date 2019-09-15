@@ -1,6 +1,6 @@
 # from android_device_fairphone_FP2
 # Camera
-#bin/mm-qcamera-daemon:vendor/bin/mm-qcamera-daemon
+bin/mm-qcamera-daemon:vendor/bin/mm-qcamera-daemon
 lib/libchromatix_imx135_liveshot.so:vendor/lib/libchromatix_imx135_liveshot.so
 vendor/lib/libactuator_dw9714.so
 vendor/lib/libactuator_dw9714_camcorder.so

@@ -132,6 +132,18 @@ include $(CLEAR_VARS)
 #
 #ALL_DEFAULT_INSTALLED_MODULES += $(KEYMASTER_SYMLINKS)
 
+KEYMASTER_IMAGES := \
+    keymaster.b00 keymaster.b01 keymaster.b02 keymaster.b03 keymaster.mdt
+
+KEYMASTER_SYMLINKS := $(addprefix $(TARGET_OUT_ETC)/firmware/,$(notdir $(KEYMASTER_IMAGES)))
+$(KEYMASTER_SYMLINKS): $(LOCAL_INSTALLED_MODULE)
+	@echo "Keymaster Firmware link: $@"
+	@mkdir -p $(dir $@)
+	@rm -rf $@
+	$(hide) ln -sf /system/vendor/firmware/$(notdir $@) $@
+
+ALL_DEFAULT_INSTALLED_MODULES += $(KEYMASTER_SYMLINKS)
+
 # Create links for audcal data files
 $(shell mkdir -p $(TARGET_OUT)/etc/firmware/wcd9320; \
 	ln -sf /data/misc/audio/wcd9320_anc.bin \
@@ -146,9 +158,9 @@ $(shell mkdir -p $(TARGET_OUT)/etc/firmware/wcd9320; \
 $(shell mkdir -p $(TARGET_OUT)/etc/firmware/wlan/prima; \
 	ln -sf /data/misc/wifi/WCNSS_qcom_cfg.ini \
 		$(TARGET_OUT)/etc/firmware/wlan/prima/WCNSS_qcom_cfg.ini;\
-	ln -sf /firmware/COUNTRY \
+	ln -sf /factory/COUNTRY \
 		$(TARGET_OUT)/etc/firmware/wlan/prima/COUNTRY;\
-	ln -sf /firmware/wifi.nv \
+	ln -sf /factory/wifi.nv \
 		$(TARGET_OUT)/etc/firmware/wlan/prima/wifi.nv)
 
 $(shell ln -sf /vendor/etc/blist.conf $(TARGET_OUT)/etc/blist.conf)

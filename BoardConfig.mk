@@ -269,10 +269,28 @@ BOARD_WPA_SUPPLICANT_DRIVER      := NL80211
 BOARD_WPA_SUPPLICANT_PRIVATE_LIB := lib_driver_cmd_qcwcn
 PRODUCT_VENDOR_MOVE_ENABLED      := true
 TARGET_DISABLE_WCNSS_CONFIG_COPY := true
+#TARGET_USES_WCNSS_CTRL := true
 TARGET_USES_QCOM_WCNSS_QMI       := true
 WIFI_DRIVER_FW_PATH_AP           := "ap"
 WIFI_DRIVER_FW_PATH_STA          := "sta"
 WPA_SUPPLICANT_VERSION           := VER_0_8_X
+
+
+# Bionic
+TARGET_LD_SHIM_LIBS := \
+    /system/vendor/bin/mm-qcamera-daemon|libshims_atomic.so \
+    /system/vendor/bin/mpdecision|libshims_atomic.so
+
+#TARGET_PROCESS_SDK_VERSION_OVERRIDE += \
+#    /system/bin/mediaserver=22 \
+#    /system/vendor/bin/mm-qcamera-daemon=22
+
+#USE_DEVICE_SPECIFIC_CAMERA := true
+#TARGET_NEEDS_LEGACY_CAMERA_HAL1_DYN_NATIVE_HANDLE := true
+
+#TARGET_PROCESS_SDK_VERSION_OVERRIDE += \
+#    /system/vendor/bin/mm-qcamera-daemon=23
+
 
 # TWRP
 ifeq ($(WITH_TWRP),true)

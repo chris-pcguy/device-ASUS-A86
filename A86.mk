@@ -114,10 +114,6 @@ PRODUCT_COPY_FILES += \
    $(LOCAL_PATH)/configs/wpa_supplicant_overlay.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/wpa_supplicant_overlay.conf \
    $(LOCAL_PATH)/configs/p2p_supplicant_overlay.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/p2p_supplicant_overlay.conf
 
-# Art
-PRODUCT_PROPERTY_OVERRIDES += \
-    dalvik.vm.dex2oat-swap=false
-
 # Audio
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/audio/acdb/MTP_Bluetooth_cal.acdb:system/etc/acdbdata/MTP/MTP_Bluetooth_cal.acdb \
@@ -160,7 +156,8 @@ PRODUCT_PACKAGES += \
 
 # USB
 PRODUCT_PACKAGES += \
-    android.hardware.usb@1.0-service.basic
+    android.hardware.usb@1.0-service.basic \
+    com.android.future.usb.accessory
 
 # Health
 PRODUCT_PACKAGES += \
@@ -170,12 +167,8 @@ PRODUCT_PACKAGES += \
 # Keymaster
 PRODUCT_PACKAGES += \
     android.hardware.keymaster@3.0-impl \
-    android.hardware.keymaster@3.0-service \
     keystore.msm8974
-
-# Keystore
-PRODUCT_PACKAGES += \
-    keystore.msm8974
+#    android.hardware.keymaster@3.0-service \
 
 # Trust HAL
 PRODUCT_PACKAGES += \
@@ -216,6 +209,7 @@ PRODUCT_PACKAGES += \
     hostapd.deny \
     libqsap_sdk \
     libwpa_client \
+    libwcnss_qmi \
     wcnss_service \
     wpa_supplicant \
     wpa_supplicant.conf \
@@ -241,27 +235,34 @@ PRODUCT_PACKAGES += \
     init.qcom.fm.sh
 
 # Bluetooth
+#PRODUCT_PACKAGES += \
+#    android.hardware.bluetooth@1.0-impl \
+#    android.hardware.bluetooth@1.0-service \
+#    libbt-vendor
+
 PRODUCT_PACKAGES += \
-    android.hardware.bluetooth@1.0-impl \
-    android.hardware.bluetooth@1.0-service \
-    libbt-vendor
+    hci_qcomm_init \
+    libbt-vendor \
+    android.hardware.bluetooth@1.0-impl
 
 # Lights
+#PRODUCT_PACKAGES += \
+#    android.hardware.light@2.0-impl \
+#    android.hardware.light@2.0-service \
+#    lights.msm8974
 PRODUCT_PACKAGES += \
-    android.hardware.light@2.0-impl \
-    android.hardware.light@2.0-service \
-    lights.msm8974
+    android.hardware.light@2.0-impl
 
 # Perf
 PRODUCT_PACKAGES += \
     libshims_atomic
 
 # RIL Shim
-PRODUCT_PACKAGES += \
-    libqsap_shim
-
-PRODUCT_PACKAGES += \
-    libshims_thermal
+#PRODUCT_PACKAGES += \
+#    libqsap_shim
+#
+#PRODUCT_PACKAGES += \
+#    libshims_thermal
 
 # RenderScript HAL
 PRODUCT_PACKAGES += \
@@ -281,9 +282,10 @@ PRODUCT_PACKAGES += \
     android.hardware.camera.provider@2.4-impl \
     camera.device@1.0-impl \
     camera.msm8974 \
-    libshim_camera \
-    libshims_sensorlistener \
     Snap
+
+#    libshim_camera \
+#    libshims_sensorlistener \
 
 # DRM
 PRODUCT_PACKAGES += \
@@ -307,6 +309,10 @@ PRODUCT_PACKAGES += \
     android.hardware.gnss@1.0-service \
     gps.msm8974
 
+# LiveDisplay
+PRODUCT_PACKAGES += \
+    vendor.lineage.livedisplay@2.0
+
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/gps/flp.conf:system/etc/flp.conf \
     $(LOCAL_PATH)/gps/gps.conf:system/etc/gps.conf \
@@ -323,6 +329,16 @@ PRODUCT_PACKAGES += \
     com.dsi.ant.antradio_library \
     libantradio
 
+# Radio
+PRODUCT_PACKAGES += \
+    android.hardware.radio@1.0 \
+    android.hardware.radio.deprecated@1.0 \
+    libxml2 \
+    libprotobuf-cpp-full
+
+PRODUCT_PACKAGES += \
+    libril \
+    rild
 
 # Vendor security patch level
 PRODUCT_PROPERTY_OVERRIDES += \

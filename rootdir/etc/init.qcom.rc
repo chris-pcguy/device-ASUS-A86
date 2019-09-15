@@ -68,20 +68,21 @@ on early-boot
     #write /sys/module/pil_msa/parameters/pbl_mba_boot_timeout_ms ${persist.sys.mba_boot_timeout}
     #write /sys/module/pil_msa/parameters/modem_auth_timeout_ms ${persist.sys.modem_auth_timeout}
     #write /sys/module/peripheral_loader/parameters/proxy_timeout_ms ${persist.sys.pil_proxy_timeout}
+    #write /proc/sys/kernel/poweroff_cmd "/system/bin/reboot -p"
+    # set wifi link file.
+    setprop wlan.driver.ath 0
+    setprop wlan.driver.status unloaded
+    #copy /system/etc/wifi/WCNSS_qcom_cfg.ini /data/misc/wifi/WCNSS_qcom_cfg.ini
+    copy /system/vendor/firmware/wlan/prima/WCNSS_qcom_cfg.ini /data/misc/wifi/WCNSS_qcom_cfg.ini
+    chown system wifi /data/misc/wifi/WCNSS_qcom_cfg.ini
+    chmod 0660 /data/misc/wifi/WCNSS_qcom_cfg.ini
+    #symlink /system/lib/modules/pronto/pronto_wlan.ko /system/lib/modules/wlan.ko
+    setprop wlan.driver.config /system/etc/firmware/wlan/prima/WCNSS_qcom_cfg.ini
     write /sys/kernel/boot_adsp/boot 1
-    write /sys/kernel/boot_cdsp/boot 1
-    write /sys/kernel/boot_slpi/boot 1
-    #exec u:r:qti_init_shell:s0 -- /vendor/etc/init.qcom.early_boot.sh
-    exec u:r:qti_init_shell:s0 -- /init.qcom.early_boot.sh
-    write /sys/module/subsystem_restart/parameters/disable_restart_work 0x0
-    write /proc/sys/kernel/poweroff_cmd "/system/bin/reboot -p"
+    setprop qcom.audio.init complete
+    start config_bluetooth
 
 on init
-    # Set the property to indicate type of virtual display to 0
-    # 0 indicates that virtual display is not a Wifi display and that the
-    # session is not exercised through RemoteDisplay in the android framework
-    setprop persist.sys.wfd.virtual 0
-
     symlink /system/vendor/lib/egl /egl
     # Set permissions for persist partition
     mkdir /persist 0771 system system
@@ -133,19 +134,16 @@ on fs
     mkdir /persist/data/sfs 0700 system system
     mkdir /persist/data/tz 0700 system system
 
-    wait /dev/block/platform/msm_sdcc.2/by-name/modem
-    mount vfat /dev/block/platform/msm_sdcc.2/by-name/modem /firmware ro context=u:object_r:firmware_file:s0,shortname=lower,uid=1000,gid=1000,dmask=227,fmask=337
+    wait /dev/block/platform/msm_sdcc.1/by-name/modem
+    mount vfat /dev/block/platform/msm_sdcc.1/by-name/modem /firmware ro context=u:object_r:firmware_file:s0,shortname=lower,uid=1000,gid=1000,dmask=227,fmask=337
 
     ##swapon_all /vendor/etc/fstab.qcom
     #swapon_all fstab.qcom
 
-    write /sys/kernel/boot_adsp/boot 1
-    setprop qcom.audio.init complete
-
 # +++ ASUS_BSP : Add for mount demoapp partition
-service mount-cache2 /system/bin/sh /system/etc/init.asus.mount-cache2.sh
-    class late_start
-    oneshot
+#service mount-cache2 /system/bin/sh /system/etc/init.asus.mount-cache2.sh
+#    class late_start
+#    oneshot
 
 on property:persist.sys.enableAPD=1
     #start mount-cache2
@@ -190,11 +188,23 @@ on post-fs-data
     mkdir /data/misc/bluetooth 0770 bluetooth bluetooth
 
     # Create the directories used by the Wireless subsystem
+    mkdir /data/vendor/wifi 0770 wifi wifi
+    mkdir /data/vendor/wifi/hostapd/ctrl 0770 wifi wifi
+    mkdir /data/vendor/wifi/wpa 0770 wifi wifi
+    mkdir /data/vendor/wifi/wpa/sockets 0770 wifi wifi
+    mkdir /data/vendor/wifi/wpa_supplicant 0770 wifi wifi
+
+    # Create the directories used by the Wireless subsystem
     mkdir /data/misc/wifi 0770 wifi wifi
     mkdir /data/misc/wifi/sockets 0770 wifi wifi
     mkdir /data/misc/wifi/wpa_supplicant 0770 wifi wifi
+    #mkdir /data/misc/dhcp 0770 dhcp wifi
+    #chown dhcp wifi /data/misc/dhcp
     mkdir /data/misc/dhcp 0770 dhcp dhcp
     chown dhcp dhcp /data/misc/dhcp
+
+    # Kickstart the Wireless subsystem
+    write /dev/wcnss_wlan 1
 
     # Create the directories used by CnE subsystem
     mkdir /data/connectivity 0771 system system
@@ -258,6 +268,10 @@ on post-fs-data
 
     mkdir /data/audio/ 0770 media audio
 
+    mkdir /data/misc/audio 0770 audio audio
+    mkdir /data/misc/qsee 0770 system system
+    mkdir /data/system/time/ 0700 system system
+
     #Create a folder for SRS to be able to create a usercfg file
     mkdir /data/data/media 0770 media media
 
@@ -285,6 +299,170 @@ on post-fs-data
     write /proc/asusevtlog  "ASDF: Check LastShutdown log."
     write /proc/asusdebug  get_asdf_log
 
+    # ASUS_BSP+++ Eason_Chang BalanceMode
+    chown system system /proc/driver/balanceChg
+    # ASUS_BSP--- Eason_Chang BalanceMode
+
+# ASUS_BSP +++ SinaChou  "create link for Microp Firmware Update APP"
+  symlink /sys/bus/i2c/devices/6-0015/pad_update_progress /data/pfs_pad_ec_update_progress
+  symlink /sys/bus/i2c/devices/6-0015/pad_proximity_sensor_status /data/data/pad_proximity_sensor_status
+# ASUS_BSP --- 
+
+# ASUS_BSP Freeman+++
+    symlink /sys/bus/i2c/devices/6-005c/progress /data/pfs_touch_update_progress
+    symlink /sys/devices/f9924000.i2c/i2c-2/2-0001/update_progress /data/touch_update_progress
+# ASUS_BSP Freeman ---
+
+# ASUS_BSP+++ Eason_Chang BalanceMode +++
+    chown system system /proc/driver/balanceChg
+# ASUS_BSP--- Eason_Chang BalanceMode ---
+
+#ASUS_BSP +++ Alian_Shen "Light/Proximity sensor"
+    chown system system /sys/devices/virtual/sensors/psensor/switch
+    chown system system /sys/devices/virtual/sensors/lsensor/switch
+    chown system system /sys/devices/virtual/sensors/lsensor/calvalue
+#ASUS_BSP --- Alian_Shen "Light/Proximity sensor"
+
+# ASUS_BSP --- Alian_Shen "[A86][Sensor][NA][Spec] Porting 9-axis sensor"
+    chown system system /dev/iio:device0
+    chown system system /sys/bus/iio/devices/trigger0/name
+    chown system system /sys/bus/iio/devices/iio:device0/accl_enable
+    chown system system /sys/bus/iio/devices/iio:device0/accl_matrix
+    chown system system /sys/bus/iio/devices/iio:device0/buffer/length
+    chown system system /sys/bus/iio/devices/iio:device0/buffer/enable
+    chown system system /sys/bus/iio/devices/iio:device0/compass_enable
+    chown system system /sys/bus/iio/devices/iio:device0/compass_matrix
+    chown system system /sys/bus/iio/devices/iio:device0/dmp_on
+    chown system system /sys/bus/iio/devices/iio:device0/dmp_int_on
+    chown system system /sys/bus/iio/devices/iio:device0/gyro_enable
+    chown system system /sys/bus/iio/devices/iio:device0/gyro_matrix
+    chown system system /sys/bus/iio/devices/iio:device0/in_accel_scale
+    chown system system /sys/bus/iio/devices/iio:device0/in_anglvel_scale
+    chown system system /sys/bus/iio/devices/iio:device0/in_magn_scale
+    chown system system /sys/bus/iio/devices/iio:device0/key
+    chown system system /sys/bus/iio/devices/iio:device0/power_state
+    chown system system /sys/bus/iio/devices/iio:device0/sampling_frequency
+    chown system system /sys/bus/iio/devices/iio:device0/scan_elements/in_accel_x_en
+    chown system system /sys/bus/iio/devices/iio:device0/scan_elements/in_accel_y_en
+    chown system system /sys/bus/iio/devices/iio:device0/scan_elements/in_accel_z_en
+    chown system system /sys/bus/iio/devices/iio:device0/scan_elements/in_anglvel_x_en
+    chown system system /sys/bus/iio/devices/iio:device0/scan_elements/in_anglvel_y_en
+    chown system system /sys/bus/iio/devices/iio:device0/scan_elements/in_anglvel_z_en
+    chown system system /sys/bus/iio/devices/iio:device0/scan_elements/in_magn_x_en
+    chown system system /sys/bus/iio/devices/iio:device0/scan_elements/in_magn_y_en
+    chown system system /sys/bus/iio/devices/iio:device0/scan_elements/in_magn_z_en
+    chown system system /sys/bus/iio/devices/iio:device0/scan_elements/in_timestamp_en
+    chown system system /sys/bus/iio/devices/iio:device0/temperature
+    chown system system /sys/bus/iio/devices/iio:device0/trigger/current_trigger
+    chown system system /sys/bus/iio/devices/iio:device0/in_accel_x_calibbias
+    chown system system /sys/bus/iio/devices/iio:device0/in_accel_y_calibbias
+    chown system system /sys/bus/iio/devices/iio:device0/in_accel_z_calibbias
+    chown system system /sys/bus/iio/devices/iio:device0/scan_elements/in_quaternion_x_en
+    chown system system /sys/bus/iio/devices/iio:device0/scan_elements/in_quaternion_y_en
+    chown system system /sys/bus/iio/devices/iio:device0/scan_elements/in_quaternion_z_en
+    chown system system /sys/bus/iio/devices/iio:device0/scan_elements/in_quaternion_r_en
+    chown system system /sys/bus/iio/devices/iio:device0/in_accel_x_offset
+    chown system system /sys/bus/iio/devices/iio:device0/in_accel_y_offset
+    chown system system /sys/bus/iio/devices/iio:device0/in_accel_z_offset
+    chown system system /sys/bus/iio/devices/iio:device0/in_anglvel_x_calibbias
+    chown system system /sys/bus/iio/devices/iio:device0/in_anglvel_y_calibbias
+    chown system system /sys/bus/iio/devices/iio:device0/in_anglvel_z_calibbias
+
+
+    chmod 600 /dev/iio:device0
+    chmod 600 /sys/bus/iio/devices/trigger0/name
+    chmod 600 /sys/bus/iio/devices/iio:device0/accl_enable
+    chmod 600 /sys/bus/iio/devices/iio:device0/accl_matrix
+    chmod 600 /sys/bus/iio/devices/iio:device0/buffer/length
+    chmod 600 /sys/bus/iio/devices/iio:device0/buffer/enable
+    chmod 600 /sys/bus/iio/devices/iio:device0/compass_enable
+    chmod 600 /sys/bus/iio/devices/iio:device0/compass_matrix
+    chmod 600 /sys/bus/iio/devices/iio:device0/dmp_on
+    chmod 600 /sys/bus/iio/devices/iio:device0/dmp_int_on
+    chmod 600 /sys/bus/iio/devices/iio:device0/gyro_enable
+    chmod 600 /sys/bus/iio/devices/iio:device0/gyro_matrix
+    chmod 600 /sys/bus/iio/devices/iio:device0/in_accel_scale
+    chmod 600 /sys/bus/iio/devices/iio:device0/in_anglvel_scale
+    chmod 600 /sys/bus/iio/devices/iio:device0/in_magn_scale
+    chmod 600 /sys/bus/iio/devices/iio:device0/key
+    chmod 600 /sys/bus/iio/devices/iio:device0/power_state
+    chmod 600 /sys/bus/iio/devices/iio:device0/sampling_frequency
+    chmod 600 /sys/bus/iio/devices/iio:device0/scan_elements/in_accel_x_en
+    chmod 600 /sys/bus/iio/devices/iio:device0/scan_elements/in_accel_y_en
+    chmod 600 /sys/bus/iio/devices/iio:device0/scan_elements/in_accel_z_en
+    chmod 600 /sys/bus/iio/devices/iio:device0/scan_elements/in_anglvel_x_en
+    chmod 600 /sys/bus/iio/devices/iio:device0/scan_elements/in_anglvel_y_en
+    chmod 600 /sys/bus/iio/devices/iio:device0/scan_elements/in_anglvel_z_en
+    chmod 600 /sys/bus/iio/devices/iio:device0/scan_elements/in_magn_x_en
+    chmod 600 /sys/bus/iio/devices/iio:device0/scan_elements/in_magn_y_en
+    chmod 600 /sys/bus/iio/devices/iio:device0/scan_elements/in_magn_z_en
+    chmod 600 /sys/bus/iio/devices/iio:device0/scan_elements/in_timestamp_en
+    chmod 600 /sys/bus/iio/devices/iio:device0/temperature
+    chmod 600 /sys/bus/iio/devices/iio:device0/trigger/current_trigger
+    chmod 774 /sys/bus/iio/devices/iio:device0/in_accel_x_calibbias
+    chmod 774 /sys/bus/iio/devices/iio:device0/in_accel_y_calibbias
+    chmod 774 /sys/bus/iio/devices/iio:device0/in_accel_z_calibbias
+    chmod 774 /sys/bus/iio/devices/iio:device0/scan_elements/in_quaternion_x_en
+    chmod 774 /sys/bus/iio/devices/iio:device0/scan_elements/in_quaternion_y_en
+    chmod 774 /sys/bus/iio/devices/iio:device0/scan_elements/in_quaternion_z_en
+    chmod 774 /sys/bus/iio/devices/iio:device0/scan_elements/in_quaternion_r_en
+    chmod 774 /sys/bus/iio/devices/iio:device0/in_accel_x_offset
+    chmod 774 /sys/bus/iio/devices/iio:device0/in_accel_y_offset
+    chmod 774 /sys/bus/iio/devices/iio:device0/in_accel_z_offset
+    chmod 774 /sys/bus/iio/devices/iio:device0/in_anglvel_x_calibbias
+    chmod 774 /sys/bus/iio/devices/iio:device0/in_anglvel_y_calibbias
+    chmod 774 /sys/bus/iio/devices/iio:device0/in_anglvel_z_calibbias
+
+    
+    symlink /sys/devices/f9925000.i2c/i2c-3/3-0068/iio:device0/gyro_6500_status /data/data/gyroscope_status
+    symlink /sys/devices/f9925000.i2c/i2c-3/3-0068/iio:device0/accel_6500_status /data/data/gsensor_status
+  
+    mkdir /data/amit 0775 system system
+    symlink /sys/devices/f9925000.i2c/i2c-3/3-0068/iio:device0/accel_6500_raw /data/data/gsensor_raw
+    
+    chown system system /sys/devices/f9925000.i2c/i2c-3/3-0068/iio:device0/gyro_6500_status
+    chmod 0600  /sys/devices/f9925000.i2c/i2c-3/3-0068/iio:device0/gyro_6500_status
+
+    chown system system /sys/devices/f9925000.i2c/i2c-3/3-0068/iio:device0/accel_6500_raw
+    chmod 0600  /sys/devices/f9925000.i2c/i2c-3/3-0068/iio:device0/accel_6500_raw
+
+    chown system system /sys/devices/f9925000.i2c/i2c-3/3-000e/compass_6500_status
+    chmod 0600  /sys/devices/f9925000.i2c/i2c-3/3-000e/compass_6500_status
+
+    chown system system /sys/devices/f9925000.i2c/i2c-3/3-000e/compass_6500_raw
+    chmod 0600  /sys/devices/f9925000.i2c/i2c-3/3-000e/compass_6500_raw
+
+    chmod 0777 /etc/ECompassTest
+    chmod 0777 /etc/GSensorTest
+    chmod 0777 /etc/GyroTest
+    rm /data/data/GSensorTest
+    rm /data/data/etc/ECompassTest
+    rm /data/data/etc/GyroTest
+    symlink /etc/ECompassTest /data/data/ECompassTest
+    symlink /etc/GSensorTest /data/data/GSensorTest
+    symlink /etc/GyroTest /data/data/GyroTest
+    chmod 0777 /data/data/GSensorTest
+    chmod 0777 /data/data/ECompassTest
+    chmod 0777 /data/data/GyroTest
+
+    symlink /etc/inv_self_test-shared /date/data/inv_self_test-shared
+    chmod 777 /date/data/inv_self_test-shared
+
+    symlink /sys/devices/f9925000.i2c/i2c-3/3-000e/compass_6500_status /data/data/ecompass_status
+    symlink /sys/devices/f9925000.i2c/i2c-3/3-000e/compass_6500_i2c /data/data/ecompass_phone_i2c
+    symlink /sys/devices/f9925000.i2c/i2c-3/3-000e/compass_6500_raw /data/data/ecompass_raw
+    symlink /system/bin/amid /data/amit/amid
+    
+    chown system system /dev/ami304
+    chown system system /dev/ami304daemon
+    chown system system /dev/ami304hal
+    chown system system /data/amit/amid
+    chmod 600 /dev/ami304
+    chmod 600 /dev/ami304daemon
+    chmod 600 /dev/ami304hal
+    chmod 755 /data/amit/amid
+
+# ASUS_BSP --- Alian_Shen "[A86][Sensor][NA][Spec] Porting 9-axis sensor"
     setprop vold.post_fs_data_done 1
 
 on boot
@@ -330,14 +508,11 @@ on boot
     mkdir /dev/socket/qmux_gps 0770 gps gps
     chmod 2770 /dev/socket/qmux_gps
 
+    # Allow QMUX daemon to assign port open wait time
+    chown radio radio /sys/devices/virtual/hsicctl/hsicctl0/modem_wait
+
     #Create NETMGR daemon socket area
     mkdir /dev/socket/netmgr 0750 radio radio
-
-#   Define TCP buffer sizes for various networks
-#   ReadMin, ReadInitial, ReadMax, WriteMin, WriteInitial, WriteMax,
-    setprop net.tcp.buffersize.wifi    524288,2097152,4194304,262144,524288,1048576
-
-    chmod 0444 /sys/devices/platform/msm_hsusb/gadget/usb_state
 
     #For bridgemgr daemon to inform the USB driver of the correct transport
     chown radio radio /sys/class/android_usb/f_rmnet_smd_sdio/transport
@@ -345,6 +520,7 @@ on boot
 #   Define TCP buffer sizes for various networks
 #   ReadMin, ReadInitial, ReadMax, WriteMin, WriteInitial, WriteMax,
     setprop net.tcp.buffersize.default 4096,87380,110208,4096,16384,110208
+    setprop net.tcp.buffersize.wifi    524288,1048576,2097152,262144,524288,1048576
     setprop net.tcp.buffersize.lte     524288,1048576,2097152,262144,524288,1048576
     setprop net.tcp.buffersize.umts    4094,87380,110208,4096,16384,110208
     setprop net.tcp.buffersize.hspa    4094,87380,1220608,4096,16384,1220608
@@ -413,17 +589,33 @@ on boot
     chmod 0660 /sys/class/sig_sensor/g_sensor/en_sig_motion
 
     # Graphics node permissions
-    chmod 0664 /sys/class/graphics/fb0/dyn_pu
     chmod 0664 /sys/class/graphics/fb0/dynamic_fps
+    chmod 0664 /sys/class/graphics/fb0/idle_notify
     chmod 0664 /sys/class/graphics/fb0/idle_time
     chmod 0664 /sys/class/graphics/fb0/mode
     chmod 0664 /sys/class/graphics/fb0/modes
+    chmod 0664 /sys/class/graphics/fb1/idle_notify
+    chmod 0664 /sys/class/graphics/fb1/idle_time
+    chmod 0664 /sys/class/graphics/fb1/mode
+    chmod 0664 /sys/class/graphics/fb1/modes
+    chmod 0664 /sys/class/graphics/fb2/idle_notify
+    chmod 0664 /sys/class/graphics/fb2/idle_time
+    chmod 0664 /sys/class/graphics/fb2/mode
+    chmod 0664 /sys/class/graphics/fb2/modes
 
-    chown system graphics /sys/class/graphics/fb0/dyn_pu
     chown system graphics /sys/class/graphics/fb0/dynamic_fps
+    chown system graphics /sys/class/graphics/fb0/idle_notify
     chown system graphics /sys/class/graphics/fb0/idle_time
     chown system graphics /sys/class/graphics/fb0/mode
     chown system graphics /sys/class/graphics/fb0/modes
+    chown system graphics /sys/class/graphics/fb1/idle_notify
+    chown system graphics /sys/class/graphics/fb1/idle_time
+    chown system graphics /sys/class/graphics/fb1/mode
+    chown system graphics /sys/class/graphics/fb1/modes
+    chown system graphics /sys/class/graphics/fb2/idle_notify
+    chown system graphics /sys/class/graphics/fb2/idle_time
+    chown system graphics /sys/class/graphics/fb2/mode
+    chown system graphics /sys/class/graphics/fb2/modes
 
     #####
     # 4.3 requires this
@@ -449,30 +641,144 @@ on boot
     # create symlink for fb1 as HDMI
     symlink /dev/graphics/fb1 /dev/graphics/hdmi
 
-    # Remove write permissions to video related nodes
-    chmod 0664 /sys/devices/virtual/graphics/fb1/hpd
-    chmod 0664 /sys/devices/virtual/graphics/fb1/video_mode
-    chmod 0664 /sys/devices/virtual/graphics/fb1/format_3d
-    chown system graphics /sys/class/graphics/fb1/vscr_info
-    chmod 0664 /sys/devices/virtual/graphics/fb1/vscr_info
-    chmod 0664 /sys/devices/virtual/graphics/fb1/vendor_name
-    chmod 0664 /sys/devices/virtual/graphics/fb1/product_description
-
     #HDMID Permission for sys nodes
-    chown system graphics /sys/class/graphics/fb1/connected
-    chown system graphics /sys/class/graphics/fb1/edid_modes
-    chown system graphics /sys/class/graphics/fb1/power_state
     chown system graphics /sys/class/graphics/fb1/hpd
-    chown system graphics /sys/class/graphics/fb1/hdcp_present
-    chown system graphics /sys/class/graphics/fb1/hdmi_mode
+    chown system system /sys/class/graphics/fb1/hdcp/tp
     chown system graphics /sys/class/graphics/fb1/vendor_name
     chown system graphics /sys/class/graphics/fb1/product_description
-    chmod 0660 /sys/class/graphics/fb1/power_state
+    chown system graphics /sys/class/graphics/fb1/connected
+    chown system graphics /sys/class/graphics/fb1/edid_modes
+    chown system system /sys/devices/virtual/graphics/fb1/format_3d
+
+    # Remove write permissions to video related nodes
+    chmod 0664 /sys/devices/virtual/graphics/fb1/hpd
+    chmod 0664 /sys/devices/virtual/graphics/fb1/hdcp/tp
+    chmod 0664 /sys/devices/virtual/graphics/fb1/vendor_name
+    chmod 0664 /sys/devices/virtual/graphics/fb1/product_description
+    chmod 0664 /sys/devices/virtual/graphics/fb1/video_mode
+    chmod 0664 /sys/devices/virtual/graphics/fb1/format_3d
     #####
+    # Memory management.  Basic kernel parameters, and allow the high
+    # level system server to be able to adjust the kernel OOM driver
+    # parameters to match how it is managing things.
+    write /proc/sys/vm/overcommit_memory 1
+    write /proc/sys/vm/min_free_order_shift 4
+    chown root system /sys/module/lowmemorykiller/parameters/adj
+    chmod 0220 /sys/module/lowmemorykiller/parameters/adj
+    chown root system /sys/module/lowmemorykiller/parameters/minfree
+    chmod 0220 /sys/module/lowmemorykiller/parameters/minfree
+
+    # Tweak background writeout
+    write /proc/sys/vm/dirty_expire_centisecs 200
+    write /proc/sys/vm/dirty_background_ratio  5
+
+    # Permissions for System Server and daemons.
+    chown radio system /sys/android_power/state
+    chown radio system /sys/android_power/request_state
+    chown radio system /sys/android_power/acquire_full_wake_lock
+    chown radio system /sys/android_power/acquire_partial_wake_lock
+    chown radio system /sys/android_power/release_wake_lock
+    chown system system /sys/power/autosleep
+    chown system system /sys/power/state
+    chown system system /sys/power/wakeup_count
+    chown radio system /sys/power/wake_lock
+    chown radio system /sys/power/wake_unlock
+    chmod 0660 /sys/power/state
+    chmod 0660 /sys/power/wake_lock
+    chmod 0660 /sys/power/wake_unlock
+
+    chown system system /sys/devices/system/cpu/cpufreq/interactive/timer_rate
+    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/timer_rate
+    chown system system /sys/devices/system/cpu/cpufreq/interactive/timer_slack
+    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/timer_slack
+    chown system system /sys/devices/system/cpu/cpufreq/interactive/min_sample_time
+    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/min_sample_time
+    chown system system /sys/devices/system/cpu/cpufreq/interactive/hispeed_freq
+    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/hispeed_freq
+    chown system system /sys/devices/system/cpu/cpufreq/interactive/target_loads
+    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/target_loads
+    chown system system /sys/devices/system/cpu/cpufreq/interactive/go_hispeed_load
+    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/go_hispeed_load
+    chown system system /sys/devices/system/cpu/cpufreq/interactive/above_hispeed_delay
+    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/above_hispeed_delay
+    chown system system /sys/devices/system/cpu/cpufreq/interactive/boost
+    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/boost
+    chown system system /sys/devices/system/cpu/cpufreq/interactive/boostpulse
+    chown system system /sys/devices/system/cpu/cpufreq/interactive/input_boost
+    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/input_boost
+    chown system system /sys/devices/system/cpu/cpufreq/interactive/boostpulse_duration
+    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/boostpulse_duration
+    chown system system /sys/devices/system/cpu/cpufreq/interactive/io_is_busy
+    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/io_is_busy
+
+    # Assume SMP uses shared cpufreq policy for all CPUs
+    chown system system /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+    chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq	#BSP --- ShawnHuang For auto-unittest
+
+    chown system system /sys/class/timed_output/vibrator/enable
+    chown system system /sys/class/leds/keyboard-backlight/brightness
+    chown system system /sys/class/leds/lcd-backlight/brightness
+    chown system system /sys/class/leds/torch-light/brightness
+    chown system system /sys/class/leds/button-backlight/brightness
+    chown system system /sys/class/leds/jogball-backlight/brightness
+    chown system system /sys/class/leds/red/brightness
+    chown system system /sys/class/leds/green/brightness
+    chown system system /sys/class/leds/blue/brightness
+    chown system system /sys/class/leds/red/device/grpfreq
+    chown system system /sys/class/leds/red/device/grppwm
+    chown system system /sys/class/leds/red/device/blink
+    chown system system /sys/module/sco/parameters/disable_esco
+    chown system system /sys/kernel/ipv4/tcp_wmem_min
+    chown system system /sys/kernel/ipv4/tcp_wmem_def
+    chown system system /sys/kernel/ipv4/tcp_wmem_max
+    chown system system /sys/kernel/ipv4/tcp_rmem_min
+    chown system system /sys/kernel/ipv4/tcp_rmem_def
+    chown system system /sys/kernel/ipv4/tcp_rmem_max
+    chown root radio /proc/cmdline
     # Wifi firmware reload path
     chown wifi wifi /sys/module/wlan/parameters/fwpath
     #####
 
+# ASUS_BSP+++ BennyCheng "add properties to support the asus debug tool"
+on property:persist.sys.usb.otg.mode=host
+setprop sys.usb.otg.mode host
+
+on property:persist.sys.usb.otg.mode=peripheral
+setprop sys.usb.otg.mode peripheral
+
+on property:persist.sys.usb.otg.mode=auto
+setprop sys.usb.otg.mode auto
+
+on property:sys.usb.otg.mode=host
+write /proc/msm_dwc3/mode host
+
+on property:sys.usb.otg.mode=peripheral
+write /proc/msm_dwc3/mode peripheral
+
+on property:sys.usb.otg.mode=auto
+write /proc/msm_dwc3/mode auto
+
+on property:sys.usb.otg.mdm.sw=apq
+write /proc/msm_dwc3/usb_mydp_sw mydp
+
+on property:sys.usb.otg.mdm.sw=mdm
+write /proc/msm_dwc3/usb_mydp_sw usb
+# ASUS_BSP--- BennyCheng "add properties to support the asus debug tool"
+
+# ASUS_BSP+++ Eric5_Ou "add properties to check the otg at boot"
+on property:sys.boot_completed=1
+write /proc/msm_dwc3/otg_boot_check 1
+# ASUS_BSP--- Eric5_Ou "add properties to check the otg at boot"
+
+# ASUS_BSP+++ BennyCheng "add properties to support dynamic hsphy parameter_override_x setting"
+on property:sys.usb.otg.eye.diagram.para=*
+write /proc/msm_dwc3/parameter_override_x ${sys.usb.otg.eye.diagram.para}
+# ASUS_BSP--- BennyCheng "add properties to support dynamic hsphy parameter_override_x setting"
+
+on property:sys.boot_completed=1
+#Mickey+++, add for kernel aware android boot complete
+write /proc/driver/android_boot_complete 1
+#Mickey---
 ############
 
 
@@ -513,7 +819,7 @@ service netmgrd /vendor/bin/netmgrd
     user root
     group root wifi wakelock radio inet qcom_diag
 
-service irsc_util /vendor/bin/irsc_util "/etc/sec_config"
+service irsc_util /vendor/bin/irsc_util "/vendor/etc/sec_config"
     class main
     user root
     oneshot
@@ -617,7 +923,6 @@ service ril-daemon1 /vendor/bin/hw/rild -c 2
     capabilities BLOCK_SUSPEND NET_ADMIN NET_RAW
 
 on property:vold.decrypt=trigger_restart_framework
-    start qcom-c_main-sh
     start config_bluetooth
     start wcnss-service
 
@@ -625,8 +930,8 @@ on property:vold.decrypt=trigger_restart_framework
 service hciattach /system/bin/sh /init.qcom.bt.sh
     class late_start
     user bluetooth
-    group bluetooth net_bt_admin qcom_diag diag radio
-    seclabel u:r:bluetooth_loader:s0
+    group bluetooth net_bt_admin # qcom_diag diag radio
+    #seclabel u:r:bluetooth_loader:s0
     disabled
     oneshot
 
@@ -737,44 +1042,30 @@ on property:ro.data.large_tcp_window_size=true
     # Adjust socket buffer to enlarge TCP receive window for high bandwidth (e.g. DO-RevB)
     write /proc/sys/net/ipv4/tcp_adv_win_scale  2
 
-service ssr_diag /vendor/bin/ssr_diag
-    class late_start
-    user system
-    group system
+#service ssr_diag /vendor/bin/ssr_diag
+#    class late_start
+#    user system
+#    group system
 
 #ASUS-BBSP Dynamic config SSR+
 # config subsystem restart
-on property:persist.sys.modem.restart=*
-    restart ssr_cfg
+#on property:persist.sys.modem.restart=*
+#    restart ssr_cfg
 
-service ssr_cfg /system/xbin/ssr_cfg.sh
-    class late_start
-    user root
-    group root
-    disabled
-    oneshot
+#service ssr_cfg /system/xbin/ssr_cfg.sh
+#    class late_start
+#    user root
+#    group root
+#    disabled
+#    oneshot
 
-service ssr_ui /system/xbin/ssr_ui.sh
-    class late_start
-    user root
-    group root
-    disabled
-    oneshot
+#service ssr_ui /system/xbin/ssr_ui.sh
+#    class late_start
+#    user root
+#    group root
+#    disabled
+#    oneshot
 #ASUS-BBSP Dynamic config SSR-
-
-# Define fastmmi
-service fastmmi /system/bin/mmi
-    user root
-    group root
-    disabled
-
-service fastmmisrv /system/bin/sh /init.qcom.factory.sh
-    user root
-    disabled
-    oneshot
-
-on ffbm
-    start fastmmisrv
 
 service hvdcp /vendor/bin/hvdcp
     class core
@@ -787,7 +1078,7 @@ on property:persist.usb.hvdcp.detect=true
 on property:persist.usb.hvdcp.detect=false
     stop hvdcp
 
-#service program_bdaddr /vendor/bin/init.program_bdaddr.sh
+#service program_bdaddr /system/bin/sh /vendor/bin/init.program_bdaddr.sh
 service program_bdaddr /system/bin/sh /init.program_bdaddr.sh
     user bluetooth
     group bluetooth
@@ -815,16 +1106,6 @@ on property:bluetooth.startbtsnoop=true
 
 on property:bluetooth.startbtsnoop=false
     stop btsnoop
-
-service qcom-c_core-sh /system/bin/sh /init.qcom.class_core.sh
-    class core
-    user root
-    oneshot
-
-service qcom-c_main-sh /system/bin/sh /init.class_main.sh
-    class main
-    user root
-    oneshot
 
 on property:bluetooth.start_hci=true
     start start_hci_filter
