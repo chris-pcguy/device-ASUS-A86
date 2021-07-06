@@ -13,4 +13,4 @@
 |ROM|32/64 GB
 |Battery|Phone: 2250(2400) mAh; Tablet: 5000 mAh|
 
-This device tree has been originally created by Chronosms in 2018
+A non-functional, completely empty device tree has been originally created by Chronosms in 2018, see the first commit for it.
